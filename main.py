@@ -3,7 +3,7 @@ import shutil
 import sys
 from pathlib import Path
 
-if shutil.which("uv") is not None:
+if shutil.which("uv") is None:
     print("uv is required to use Nephthys. Please install uv.")
     sys.exit()
 
