@@ -19,16 +19,16 @@ print("Entering nephthys...")
 os.chdir('nephthys')
 
 # Slack details
-program = input("What is your program ID? Examples: flavortown, hcai, stardance.")
-program_name = input("What is your program display name? Examples: Flavortown, Hack Club AI, Outpost.")
+program = input("What is your program ID? Examples: flavortown, hcai, stardance.\n")
+program_name = input("What is your program display name? Examples: Flavortown, Hack Club AI, Outpost.\n")
 
-owner = input("What is the program owner's Slack ID? (starts with U0...)?")
+owner = input("What is the program owner's Slack ID? (starts with U0...)?\n")
 
-help_channel = input("What is your public-facing help channel ID? (starts with C0...)?")
-help_channel = input("What is your private ticketing channel ID? (starts with C0...)?")
-bts_channel = input("What is your private behind-the-scenes help channel ID? (starts with C0...)?")
+help_channel = input("What is your public-facing help channel ID? (starts with C0...)?\n")
+help_channel = input("What is your private ticketing channel ID? (starts with C0...)?\n")
+bts_channel = input("What is your private behind-the-scenes help channel ID? (starts with C0...)?\n")
 
-faq_link = input("What is the link to your FAQ page?")
+faq_link = input("What is the link to your FAQ page?\n")
 
 # Default strings
 RESOLVE_BUTTON_DEFAULT = "i get it now!"
@@ -41,13 +41,13 @@ FAQ_MACRO_DEFAULT = "ooh, it looks like that question's answered in our FAQ! Hav
 NOT_ALLOWED_DEFAULT = "heya, it looks like you're not supposed to be in that channel, pls talk to <@{program_owner}> if that's wrong"
 
 # Strings
-resolve_ticket_button = input(f"What should the resolve button say? (default: {RESOLVE_BUTTON_DEFAULT})") or RESOLVE_BUTTON_DEFAULT
+resolve_ticket_button = input(f"What should the resolve button say? (default: {RESOLVE_BUTTON_DEFAULT})\n") or RESOLVE_BUTTON_DEFAULT
 
-new_user_msg = input(f"What should the new user message say? (default: {NEW_USER_DEFAULT}") or NEW_USER_DEFAULT
+new_user_msg = input(f"What should the new user message say? (default: {NEW_USER_DEFAULT}\n") or NEW_USER_DEFAULT
 
-ticket_create_msg = input(f"What should the ticket create message say? (default: {TICKET_CREATE_DEFAULT})") or TICKET_CREATE_DEFAULT
-ticket_resolve_msg = input(f"What should the ticket resolved say? (default: {TICKET_RESOLVE_DEFAULT})") or TICKET_RESOLVE_DEFAULT
+ticket_create_msg = input(f"What should the ticket create message say? (default: {TICKET_CREATE_DEFAULT})\n") or TICKET_CREATE_DEFAULT
+ticket_resolve_msg = input(f"What should the ticket resolved say? (default: {TICKET_RESOLVE_DEFAULT})\n") or TICKET_RESOLVE_DEFAULT
 
-faq_macro = input(f"What should the FAQ macro (!faq) say? (default: {FAQ_MACRO_DEFAULT})") or FAQ_MACRO_DEFAULT
+faq_macro = input(f"What should the FAQ macro (!faq) say? (default: {FAQ_MACRO_DEFAULT})\n") or FAQ_MACRO_DEFAULT
 
-not_allowed_msg = input(f"What should the not allowed message say? (default: {NOT_ALLOWED_DEFAULT}") or NOT_ALLOWED_DEFAULT
+not_allowed_msg = input(f"What should the not allowed message say? (default: {NOT_ALLOWED_DEFAULT}\n") or NOT_ALLOWED_DEFAULT
