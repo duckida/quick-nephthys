@@ -14,9 +14,6 @@ Nephthys requires a PostgreSQL database to store tickets. An easy way to run one
 1. Install Docker: https://docs.docker.com/engine/install/
 2. Run a database: `docker run --name hh-postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres`
 3. Create the table: `docker exec -it hh psql -U postgres -c "CREATE DATABASE nephthys;"`
-### Slack channels
-Create a public-facing help channel, a private tickets channel, and a private behind-the-scenes channel.
-Store the channel ID for each by right-clicking the channel, clicking details, and scrolling to the bottom to find it.
 #### Slack API setup
 A [video demo](https://user-cdn.hackclub-assets.com/019ff147-b57b-79d5-85f7-29e888509556/slack-api-setup-quick-nephthys.mp4) is available.
 
@@ -31,7 +28,12 @@ A [video demo](https://user-cdn.hackclub-assets.com/019ff147-b57b-79d5-85f7-29e8
 8. From Settings→Basic Information, retrieve and store the Signing Secret.
 9. Scroll to App-Level Tokens and create one called Nephthys, and store this too
 10. Add your bot to your help channel 
+### Slack channels
+Create a public-facing help channel, a private tickets channel, and a private behind-the-scenes channel.
 
+Store the channel ID for each by right-clicking the channel, clicking details, and scrolling to the bottom to find it.
+
+Add any help team members, and your Slack bot, to all of these channels.
 ### usage
 1. Download the script: `wget https://raw.githubusercontent.com/duckida/quick-nephthys/refs/heads/main/main.py`
 2. Run the script and follow the prompts! `python3 main.py`
