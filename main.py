@@ -3,9 +3,9 @@ TRANSCRIPT_DEFAULT = '''
 from nephthys.transcripts.transcript import Transcript
 
 class F_CLASSNAME(Transcript):
-    """Transcript for F_DISPLAYNAME"""
+    """Transcript for F_CODENAME"""
 
-    program_name: str = "F_DISPLAYNAME"
+    program_name: str = "F_CODENAME"
     program_owner: str = "F_OWNER"
 
     help_channel: str = "F_HELP_CHANNEL"
@@ -115,7 +115,6 @@ bot_token = input("What is your Slack Bot bot token (starts with xoxb-)?\n")
 
 # Program details
 program_codename = input("What is your one-word program ID? Examples: flavortown, hcai, stardance.\n")
-program_name = input("What is your program display name? Examples: Flavortown, Hack Club AI, Outpost.\n")
 helpbot_name = input("What is your help bot's name? Examples: Helper Heidi, orphAIus.\n")
 
 owner = input("What is the program owner's Slack ID? (starts with U0...)?\n")
@@ -171,7 +170,7 @@ transcript_file_path = transcripts_path / f"{program_codename}.py"
 transcript_content = (
     TRANSCRIPT_DEFAULT
     .replace("F_CLASSNAME", class_name)
-    .replace("F_DISPLAYNAME", program_name)
+    .replace("F_CODENAME", program_codename)
     .replace("F_OWNER", owner)
     .replace("F_HELP_CHANNEL", help_channel)
     .replace("F_TICKET_CHANNEL", ticket_channel)
@@ -216,7 +215,7 @@ os.system("source .venv/bin/activate")
 os.system("uv run pre-commit install")
 
 print("Running database migrations & setup...")
-os.system(f'DATABASE_URL="{database_url}" piccolo migrations forwards nephthys'
+os.system(f'DATABASE_URL="{database_url}" uv run piccolo migrations forward nephthys'
 )
 
-print("Nephthys is now ready! To use it, run `nephthys`")
+print("Nephthys is now ready! To use it, run `uv run nephthys`")
