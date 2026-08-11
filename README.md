@@ -26,5 +26,6 @@ Nephthys requires a PostgreSQL database to store tickets. An easy way to run one
 8. From Settings→Basic Information, retrieve and store the Signing Secret.
 9. Scroll to App-Level Tokens and create one called Nephthys, and store this too
 
+### usage
 1. Download the script: `wget https://raw.githubusercontent.com/duckida/quick-nephthys/refs/heads/main/main.py`
 2. Run the script and follow the prompts! `python3 main.py`
