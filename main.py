@@ -89,6 +89,8 @@ os.chdir('nephthys')
 print("""
 Before starting Nephthys setup, you must have the following:
 - A Slack API bot setup with a bot token, app token, user token, & signing secret
+- A public-facing help channel, a private tickets channel, and a private behind-the-scenes channel
+- Your Slack bot added to all those channels
 - A PostgreSQL database to store tickets
 
 To set these up, read the guide in the quick-nephthys repo.
@@ -139,6 +141,7 @@ not_allowed_msg = input(f"What should the not allowed message say? (default: {NO
 ## todo: write to transcript, write to transcript init, setup .env, postgres, uv stuff, venv, run, systemd
 
 # write to .env
+print("Writing .env")
 env_content = (
     ENV_DEFAULT
     .replace("F_SLACK_BOT_TOKEN", bot_token)
@@ -157,3 +160,63 @@ env_content = (
 
 with open(".env", "w", encoding="utf-8") as f:
     f.write(env_content)
+
+# Write transcript
+print("Writing transcript")
+class_name = program_codename.capitalize()
+
+transcripts_path = Path("nephthys/transcripts/transcripts")
+transcript_file_path = transcripts_path / f"{program_codename}.py"
+
+transcript_content = (
+    TRANSCRIPT_DEFAULT
+    .replace("F_CLASSNAME", class_name)
+    .replace("F_DISPLAYNAME", program_name)
+    .replace("F_OWNER", owner)
+    .replace("F_HELP_CHANNEL", help_channel)
+    .replace("F_TICKET_CHANNEL", ticket_channel)
+    .replace("F_TEAM_CHANNEL", bts_channel)
+    .replace("F_FAQ_LINK", faq_link)
+    .replace("F_RESOLVE_BTN", resolve_ticket_button)
+    .replace("F_FIRST_TICKET", new_user_msg.strip())
+    .replace("F_TICKET_CREATE", ticket_create_msg)
+    .replace("F_TICKET_RESOLVE", ticket_resolve_msg)
+    .replace("F_NOT_ALLOWED", not_allowed_msg)
+    .replace("F_FAQ_MACRO", faq_macro)
+)
+
+transcript_file_path.write_text(transcript_content, encoding="utf-8")
+
+# write to transcripts __init__.py
+print("Updatign transcript imports")
+init_path = Path("nephthys/transcripts/__init__.py")
+init_content = init_path.read_text()
+
+import_line = f"from nephthys.transcripts.transcripts.{program_codename} import {class_name}"
+
+init_content = init_content.replace(
+"from nephthys.transcripts.transcript import Transcript",
+f"from nephthys.transcripts.transcript import Transcript\n{import_line}"
+)
+
+init_content = init_content.replace(
+"transcripts: List[Type[Transcript]] = [",
+f"transcripts: List[Type[Transcript]] = [\n    {class_name},"
+)
+
+init_path.write_text(init_content, encoding="utf-8")
+
+print("Configuration done!")
+
+# uv stuff
+print("Installing packages...")
+os.system("uv sync")
+print("Activating venv...")
+os.system("source .venv/bin/activate")
+os.system("uv run pre-commit install")
+
+print("Running database migrations & setup...")
+os.system(f'DATABASE_URL="{database_url}" piccolo migrations forwards nephthys'
+)
+
+print("Nephthys is now ready! To use it, run `nephthys`")
