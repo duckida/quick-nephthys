@@ -1,6 +1,5 @@
 # Constants
-TRANSCRIPT_DEFAULT =
-'''
+TRANSCRIPT_DEFAULT = '''
 from nephthys.transcripts.transcript import Transcript
 
 class F_CLASSNAME(Transcript):
@@ -31,13 +30,14 @@ ENVIRONMENT="production"
 PORT=3000
 SLACK_BOT_TOKEN="F_SLACK_BOT_TOKEN"
 SLACK_USER_TOKEN="F_SLACK_USER_TOKEN"
+SLACK_APP_TOKEN="F_SLACK_APP_TOKEN"
 SLACK_SIGNING_SECRET="F_SLACK_SIGNING_TOKEN"
 SLACK_HEARTBEAT_CHANNEL=""
 SLACK_TICKET_CHANNEL="F_TICKET_CHANNEL"
 SLACK_BTS_CHANNEL="F_TEAM_CHANNEL"
 SLACK_HELP_CHANNEL="F_HELP_CHANNEL"
 SLACK_MAINTAINER_ID="F_OWNER"
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/nephthys"
+DATABASE_URL="F_DATABASE_URL"
 PROGRAM="F_CODENAME"
 BASE_URL="F_BASEURL"
 APP_TITLE="F_BOTNAME"
@@ -70,6 +70,7 @@ print(r"""
           /_/                    /____/
           """)
 
+# Checking uv and Nephthys installation
 if shutil.which("uv") is None:
     print("uv is required to use Nephthys. Please install uv.")
     sys.exit()
@@ -82,21 +83,43 @@ if not nephthys_path.is_dir(): # nephthys not installed
 else:
     print("Using pre-installed nephthys folder")
 
-print("Entering nephthys...")
 os.chdir('nephthys')
 
-# Env details
-print("Nephthys will be setup on port 3000, this must be exposed to the internet. If using Nest, you can reverse proxy this to a URL.")
-base_url = input("What is the base URL you will expose? Must start with https://")
+# Prerequesites
+print("""
+Before starting Nephthys setup, you must have the following:
+- A Slack API bot setup with a bot token, app token, user token, & signing secret
+- A PostgreSQL database to store tickets
 
-# Slack details
-program_codename = input("What is your program ID? Examples: flavortown, hcai, stardance.\n")
+To set these up, read the guide in the quick-nephthys repo.
+""")
+
+input("Press enter once you have set these up.")
+
+# Question time
+
+# Env details
+print("\nNephthys will be setup on port 3000, this must be exposed to the internet. If using Nest, you can reverse proxy this to a URL.")
+base_url = input("What is the base URL you will expose? Must start with https://\n")
+
+database_url = input("What is your database URL? (example: postgresql://postgres:postgres@localhost:5432/nephthys)\n")
+
+# Slack bot
+signing_secret = input("What is your Slack Bot signing secret?\n")
+app_token = input("What is your Slack Bot app token (starts with xapp-)?\n")
+user_token = input("What is your Slack Bot user token (starts with xoxp-)?\n")
+bot_token = input("What is your Slack Bot bot token (starts with xoxb-)?\n")
+
+
+# Program details
+program_codename = input("What is your one-word program ID? Examples: flavortown, hcai, stardance.\n")
 program_name = input("What is your program display name? Examples: Flavortown, Hack Club AI, Outpost.\n")
+helpbot_name = input("What is your help bot's name? Examples: Helper Heidi, orphAIus.\n")
 
 owner = input("What is the program owner's Slack ID? (starts with U0...)?\n")
 
 help_channel = input("What is your public-facing help channel ID? (starts with C0...)?\n")
-help_channel = input("What is your private ticketing channel ID? (starts with C0...)?\n")
+ticket_channel = input("What is your private ticketing channel ID? (starts with C0...)?\n")
 bts_channel = input("What is your private behind-the-scenes help channel ID? (starts with C0...)?\n")
 
 faq_link = input("What is the link to your FAQ page?\n")
@@ -114,3 +137,23 @@ faq_macro = input(f"What should the FAQ macro (!faq) say? (default: {FAQ_MACRO_D
 not_allowed_msg = input(f"What should the not allowed message say? (default: {NOT_ALLOWED_DEFAULT}\n") or NOT_ALLOWED_DEFAULT
 
 ## todo: write to transcript, write to transcript init, setup .env, postgres, uv stuff, venv, run, systemd
+
+# write to .env
+env_content = (
+    ENV_DEFAULT
+    .replace("F_SLACK_BOT_TOKEN", bot_token)
+    .replace("F_SLACK_APP_TOKEN", app_token)
+    .replace("F_SLACK_USER_TOKEN", user_token)
+    .replace("F_SLACK_SIGNING_TOKEN", signing_secret)
+    .replace("F_TICKET_CHANNEL", ticket_channel)
+    .replace("F_TEAM_CHANNEL", bts_channel)
+    .replace("F_HELP_CHANNEL", help_channel)
+    .replace("F_OWNER", owner)
+    .replace("F_DATABASE_URL", database_url)
+    .replace("F_CODENAME", program_codename)
+    .replace("F_BASEURL", base_url)
+    .replace("F_BOTNAME", helpbot_name)
+)
+
+with open(".env", "w", encoding="utf-8") as f:
+    f.write(env_content)
