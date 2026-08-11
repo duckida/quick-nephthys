@@ -14,6 +14,7 @@ Nephthys requires a PostgreSQL database to store tickets. An easy way to run one
 1. Install Docker: https://docs.docker.com/engine/install/
 2. Run a database: `docker run --name hh-postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres`
 3. Create the table: `docker exec -it hh-postgres psql -U postgres -c "CREATE DATABASE nephthys;"`
+4. Your database URL is now `postgresql://postgres:postgres@localhost:5432/nephthys`
 #### Slack API setup
 A [video demo](https://user-cdn.hackclub-assets.com/019ff147-b57b-79d5-85f7-29e888509556/slack-api-setup-quick-nephthys.mp4) is available.
 
