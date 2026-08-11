@@ -13,7 +13,7 @@ quick nephthys is a python script which asks you questinos about your setup & pr
 Nephthys requires a PostgreSQL database to store tickets. An easy way to run one is using Docker.
 1. Install Docker: https://docs.docker.com/engine/install/
 2. Run a database: `docker run --name hh-postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres`
-3. Create the table: `docker exec -it hh psql -U postgres -c "CREATE DATABASE nephthys;"`
+3. Create the table: `docker exec -it hh-postgres psql -U postgres -c "CREATE DATABASE nephthys;"`
 #### Slack API setup
 A [video demo](https://user-cdn.hackclub-assets.com/019ff147-b57b-79d5-85f7-29e888509556/slack-api-setup-quick-nephthys.mp4) is available.
 
