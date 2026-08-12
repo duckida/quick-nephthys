@@ -44,6 +44,74 @@ APP_TITLE="F_BOTNAME"
 HACK_CLUB_AI_API_KEY=""
 '''
 
+MANIFEST_DEFAULT = """
+{
+    "display_information": {
+        "name": "F_BOTNAME",
+        "description": "F_BOTDESCRIPTION",
+        "background_color": "#c47600"
+    },
+    "features": {
+        "app_home": {
+            "home_tab_enabled": true,
+            "messages_tab_enabled": true,
+            "messages_tab_read_only_enabled": true
+        },
+        "bot_user": {
+            "display_name": "F_BOTNAME",
+            "always_online": true
+        }
+    },
+    "oauth_config": {
+        "scopes": {
+            "user": [
+                "chat:write"
+            ],
+            "bot": [
+                "channels:history",
+                "channels:read",
+                "chat:write",
+                "chat:write.customize",
+                "chat:write.public",
+                "commands",
+                "groups:history",
+                "groups:read",
+                "groups:write",
+                "im:write",
+                "mpim:read",
+                "reactions:read",
+                "reactions:write",
+                "usergroups:read",
+                "usergroups:write",
+                "users:read",
+                "users:read.email",
+                "files:write"
+            ]
+        },
+        "pkce_enabled": false
+    },
+    "settings": {
+        "event_subscriptions": {
+            "bot_events": [
+                "app_home_opened",
+                "member_joined_channel",
+                "member_left_channel",
+                "message.channels",
+                "message.groups"
+            ]
+        },
+        "interactivity": {
+            "is_enabled": true,
+            "request_url": "F_BASEURL/slack/events",
+            "message_menu_options_url": "F_BASEURL/slack/events"
+        },
+        "org_deploy_enabled": false,
+        "socket_mode_enabled": true,
+        "token_rotation_enabled": false,
+        "is_mcp_enabled": false
+    }
+}"""
+
 # Default strings
 RESOLVE_BUTTON_DEFAULT = "i get it now!"
 NEW_USER_DEFAULT = """hi (user), it looks like this is your first time here, welcome!
@@ -88,9 +156,7 @@ os.chdir('nephthys')
 # Prerequesites
 print("""
 Before starting Nephthys setup, you must have the following:
-- A Slack API bot setup with a bot token, app token, user token, & signing secret
 - A public-facing help channel, a private tickets channel, and a private behind-the-scenes channel
-- Your Slack bot added to all those channels
 - A PostgreSQL database to store tickets OR Docker installed and usable by your user
 
 To set these up, read the guide in the quick-nephthys repo.
@@ -114,8 +180,19 @@ else:
 
 # Env details
 print("\nNephthys will be setup on port 3000, this must be exposed to the internet. If using Nest, you can reverse proxy this to a URL.")
-base_url = input("What is the base URL you will expose? Must start with https://\n")
+base_url = input("What is the base URL you will expose? Must start with https:// (eg. https://help.me.hackclub.app)\n")
 
+# Slack API manifest generation
+helpbot_name = input("What is your help bot's name? Examples: Helper Heidi, orphAIus.\n")
+helpbot_desc = input("What is your help bot's description? Example: helping with your Stardance issues.\n")
+
+manifest = MANIFEST_DEFAULT.replace("F_BOTNAME", helpbot_name).replace("F_BOTDESCRIPTION", helpbot_desc).replace("F_BASEURL", base_url)
+print("Copy the manifest (everything between the lines) and paste it when creating an app from https://api.slack.com/apps.")
+print("----------------------")
+print(manifest)
+print("----------------------")
+
+print("\n Now, follow the instructions in quick-nephthys README to get tokens.")
 
 # Slack bot
 signing_secret = input("What is your Slack Bot signing secret?\n")
@@ -126,7 +203,6 @@ bot_token = input("What is your Slack Bot bot token (starts with xoxb-)?\n")
 
 # Program details
 program_codename = input("What is your one-word program ID? Examples: flavortown, hcai, stardance.\n")
-helpbot_name = input("What is your help bot's name? Examples: Helper Heidi, orphAIus.\n")
 
 owner = input("What is the program owner's Slack ID? (starts with U0...)?\n")
 
@@ -229,4 +305,4 @@ print("Running database migrations & setup...")
 os.system(f'DATABASE_URL="{database_url}" uv run piccolo migrations forward nephthys'
 )
 
-print("Nephthys is now ready! To use it, run `uv run nephthys`")
+print("Nephthys is now ready! Add your Slack bot to all your channels, and run `uv run nephthys`")
