@@ -202,7 +202,7 @@ bot_token = input("What is your Slack Bot bot token (starts with xoxb-)?\n")
 
 
 # Program details
-program_codename = input("What is your one-word program ID? Examples: flavortown, hcai, stardance.\n")
+program_codename = input("What is your one-word, letters-only program ID? Examples: flavortown, hcai, stardance.\n")
 
 owner = input("What is the program owner's Slack ID? (starts with U0...)?\n")
 
