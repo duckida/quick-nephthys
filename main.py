@@ -91,7 +91,7 @@ Before starting Nephthys setup, you must have the following:
 - A Slack API bot setup with a bot token, app token, user token, & signing secret
 - A public-facing help channel, a private tickets channel, and a private behind-the-scenes channel
 - Your Slack bot added to all those channels
-- A PostgreSQL database to store tickets
+- A PostgreSQL database to store tickets OR Docker installed and usable by your user
 
 To set these up, read the guide in the quick-nephthys repo.
 """)
@@ -100,11 +100,22 @@ input("Press enter once you have set these up.")
 
 # Question time
 
+# database setup
+use_docker_database = input("If you have Docker installed, quick-nephthys can setup a database for you. Enter y to continue with this, or n if you've already setup a datanase")
+if use_docker_database == "y":
+    print("Starting database...")
+    os.system("docker run --name hh-postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres")
+    print("Creating table...")
+    os.system('docker exec -it hh-postgres psql -U postgres -c "CREATE DATABASE nephthys;"')
+    database_url = "postgresql://postgres:postgres@localhost:5432/nephthys"
+else:
+    database_url = input("What is your database URL? (example: postgresql://postgres:postgres@localhost:5432/nephthys)\n")
+
+
 # Env details
 print("\nNephthys will be setup on port 3000, this must be exposed to the internet. If using Nest, you can reverse proxy this to a URL.")
 base_url = input("What is the base URL you will expose? Must start with https://\n")
 
-database_url = input("What is your database URL? (example: postgresql://postgres:postgres@localhost:5432/nephthys)\n")
 
 # Slack bot
 signing_secret = input("What is your Slack Bot signing secret?\n")
