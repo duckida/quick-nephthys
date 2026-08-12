@@ -298,7 +298,6 @@ print("Configuration done!")
 print("Installing packages...")
 os.system("uv sync")
 print("Activating venv...")
-os.system("source .venv/bin/activate")
 os.system("uv run pre-commit install")
 
 print("Running database migrations & setup...")
